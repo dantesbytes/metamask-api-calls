@@ -1,19 +1,19 @@
 import TransactionCount from "../model/eth_getTransactionCountModel.js";
 import dotenv from "dotenv";
-dotenv.config
+dotenv.config();
 
 
 
 
 const key = process.env.api_key;
-const INFURA_URL = `https://mainnet.infura.io/v3/${key}`;
+const INFURA_URL = `https://mainnet.infura.io/v3/dda46289fff9447e80867fa2679ba2e5`;
 
 const fetchTransactionCount = async (req, reply) => {
     try {
         const { address } = req.body;
 
         if (!address) {
-            return res.status(400).json({ error: 'Ethereum address is required' });
+            return reply.status(400).json({ error: 'Ethereum address is required' });
         }
         
         const response = await fetch(INFURA_URL, {
@@ -46,4 +46,38 @@ const fetchTransactionCount = async (req, reply) => {
     }
 };
 
-export   { fetchTransactionCount };
+const blobBaseFee = async (req, reply) => {
+
+    try {
+
+        const response = await fetch(INFURA_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_blobBaseFee",
+                params: [],
+                id: 1
+            })
+
+       
+
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        return reply.send({ blobBaseFee: data })
+        
+    } catch (error) {
+
+        console.error("error fetching blob base fee");
+        res.status(500).json({error: "fail to get blobbase fee"})
+    }
+    
+}
+
+
+export   { fetchTransactionCount, blobBaseFee};
