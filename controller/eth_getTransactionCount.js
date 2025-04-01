@@ -6,7 +6,7 @@ dotenv.config
 
 
 const key = process.env.api_key;
-const INFURA_URL = `https://mainnet.infura.io/v3/1d539028110d4ea8a3e671996cd9e5e7`;
+const INFURA_URL = `https://mainnet.infura.io/v3/${key}`;
 
 const fetchTransactionCount = async (req, reply) => {
     try {
